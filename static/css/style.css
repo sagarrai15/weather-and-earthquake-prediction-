@@ -1,0 +1,53 @@
+/* =====================================================
+   style.css  –  Earthquake Dashboard
+   ===================================================== */
+
+body {
+  background: #f0f2f5;
+  font-size: 0.9rem;
+}
+
+/* ---------- stat cards ---------- */
+.stat-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.1);
+}
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #666;
+}
+
+/* ---------- map ---------- */
+#map, #detail-map {
+  height: 420px;
+  width: 100%;
+}
+
+/* ---------- table ---------- */
+.eq-table th, .eq-table td {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Magnitude row colouring */
+.mag-row-great   { background: #ffe0e0; }
+.mag-row-major   { background: #ffd5b5; }
+.mag-row-strong  { background: #fff3cd; }
+.mag-row-moderate { background: #f5f5f5; }
+
+/* ---------- misc ---------- */
+.btn-xs {
+  font-size: 0.75rem;
+  padding: 1px 6px;
+}
+
+canvas {
+  max-height: 180px;
+}
