@@ -3,10 +3,15 @@ app.py
 Flask web application for earthquake detail and analysis.
 """
 
+import logging
+import os
+
 from flask import Flask, render_template, request, jsonify
 import earthquake_analyzer as ea
 
 app = Flask(__name__)
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -57,7 +62,8 @@ def index():
         )
         analysis = ea.analyze_earthquakes(earthquakes)
     except Exception as exc:
-        error = str(exc)
+        logger.exception("Failed to fetch earthquake data")
+        error = "Could not retrieve earthquake data. Please try again later."
 
     # Attach magnitude category to each event for template colouring
     for eq in earthquakes:
@@ -85,8 +91,9 @@ def detail(event_id):
         if earthquake:
             earthquake["mag_category"] = ea.magnitude_category(earthquake["magnitude"])
             earthquake["alert_class"] = ea.alert_label(earthquake.get("alert"))
-    except Exception as exc:
-        error = str(exc)
+    except Exception:
+        logger.exception("Failed to fetch earthquake detail for %s", event_id)
+        error = "Could not retrieve event data. Please try again later."
 
     return render_template("detail.html", earthquake=earthquake, error=error)
 
@@ -112,9 +119,11 @@ def api_earthquakes():
             limit=limit,
         )
         return jsonify({"status": "ok", "count": len(earthquakes), "data": earthquakes})
-    except Exception as exc:
-        return jsonify({"status": "error", "message": str(exc)}), 500
+    except Exception:
+        logger.exception("Failed to fetch earthquake data for API")
+        return jsonify({"status": "error", "message": "Could not retrieve data"}), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(debug=debug)
